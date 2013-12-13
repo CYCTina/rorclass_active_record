@@ -7,16 +7,16 @@ class MoviesController < ApplicationController
   	if params[:character].present?
   		@movies = @movies.joins(:characters)
   		@movies = @movies.where(
-  			characters: {name: params[:character]})
+  			'characters.name LIKE ?', "%#{params[:character]}%" )
   	end
 
   	if params[:movie].present?
   		@movies = @movies.where(
-  			name: params[:movie])
+  			'movies.name LIKE ?', "%#{params[:movie]}%" )
   	end
+  	# tables are always plural: movies, characters
 
-  	@movies = @movies.joins(:characters).order("year DESC")
-
+  	@movies = @movies.joins(:characters).order("year DESC").uniq
   end
 
   def show
